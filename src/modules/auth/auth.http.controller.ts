@@ -10,8 +10,8 @@ import {
 import { Request } from 'express';
 import { HttpExceptionFilter } from 'src/common/filters/http-exception.filter';
 import { TransformResponseInterceptor } from 'src/common/interceptors/transform-response.interceptor';
+import { User } from '../user/entities/user.entity';
 import { AuthService } from './auth.service';
-import { User } from './auth.types';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 

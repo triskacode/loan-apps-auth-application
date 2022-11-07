@@ -14,4 +14,12 @@ export class AuthHelper {
   generateToken(payload: string | Buffer | object) {
     return this.jwtService.sign(payload);
   }
+
+  verifyToken(token: string) {
+    return this.jwtService.verify(token, { ignoreExpiration: false });
+  }
+
+  decodeToken(token: string) {
+    return this.jwtService.decode(token);
+  }
 }

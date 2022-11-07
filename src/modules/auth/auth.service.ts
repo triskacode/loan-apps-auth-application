@@ -1,18 +1,17 @@
-import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
-import { ClientProxy } from '@nestjs/microservices';
-import { MicroserviceHelper } from 'src/common/helpers/microservice.helper';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { AuthHelper } from 'src/modules/auth/helpers/auth.helper';
-import { User } from './auth.types';
+import { User } from '../user/entities/user.entity';
+import { UserService } from '../user/user.service';
 
 @Injectable()
 export class AuthService {
   constructor(
-    @Inject('USER_SERVICE') private client: ClientProxy,
+    private userService: UserService,
     private authHelper: AuthHelper,
   ) {}
 
   async validateLocalStrategy(email: string, password: string) {
-    const user = await this.findUserByEmailWithPassword(email);
+    const user = await this.userService.findUserByEmailWithPassword(email);
 
     if (!user || !this.authHelper.comparePassword(password, user.password))
       throw new UnauthorizedException('Invalid credentials');
@@ -26,19 +25,9 @@ export class AuthService {
     return { accessToken: this.authHelper.generateToken(payload) };
   }
 
-  async findUserByEmailWithPassword(email: string): Promise<User> {
-    return MicroserviceHelper.sendRequest<User, { email: string }>(
-      this.client,
-      { endpoint: 'user', cmd: 'find-by-email-with-password' },
-      { email },
-    );
-  }
+  async validateToken(token: string): Promise<User> {
+    const { sub: id } = this.authHelper.verifyToken(token);
 
-  async findUserById(id: number): Promise<User> {
-    return MicroserviceHelper.sendRequest<User, { id: number }>(
-      this.client,
-      { endpoint: 'user', cmd: 'find-by-id' },
-      { id },
-    );
+    return this.userService.findUserById(id);
   }
 }

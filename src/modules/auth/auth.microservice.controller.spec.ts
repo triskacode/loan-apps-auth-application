@@ -9,7 +9,9 @@ describe('AuthMicroserviceController', () => {
       controllers: [AuthMicroserviceController],
     }).compile();
 
-    controller = module.get<AuthMicroserviceController>(AuthMicroserviceController);
+    controller = module.get<AuthMicroserviceController>(
+      AuthMicroserviceController,
+    );
   });
 
   it('should be defined', () => {

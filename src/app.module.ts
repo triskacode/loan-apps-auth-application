@@ -4,6 +4,7 @@ import { AppController } from './app.controller';
 import { AppConfig } from './config/app.config';
 import { MicroserviceConfig } from './config/microservice.config';
 import { AuthModule } from './modules/auth/auth.module';
+import { UserModule } from './modules/user/user.module';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { AuthModule } from './modules/auth/auth.module';
       load: [AppConfig, MicroserviceConfig],
     }),
     AuthModule,
+    UserModule,
   ],
   controllers: [AppController],
   providers: [],
