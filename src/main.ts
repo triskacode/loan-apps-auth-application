@@ -1,3 +1,4 @@
+import { BadRequestException, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
@@ -8,6 +9,11 @@ async function bootstrap() {
   const configService = app.get<ConfigService>(ConfigService);
 
   app.enableCors(configService.get('app.cors'));
+  app.useGlobalPipes(
+    new ValidationPipe({
+      exceptionFactory: (errors) => new BadRequestException(errors),
+    }),
+  );
 
   app.connectMicroservice<MicroserviceOptions>({
     transport: Transport.TCP,

@@ -4,9 +4,14 @@ import { AuthHttpController } from './auth.http.controller';
 import { AuthMicroserviceController } from './auth.microservice.controller';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { ConfigService } from '@nestjs/config';
+import { LocalStrategy } from './strategies/local.strategy';
+import { AuthHelper } from './helpers/auth.helper';
+import { JwtModule } from '@nestjs/jwt';
+import { PassportModule } from '@nestjs/passport';
 
 @Module({
   imports: [
+    PassportModule,
     ClientsModule.registerAsync([
       {
         name: 'USER_SERVICE',
@@ -20,8 +25,17 @@ import { ConfigService } from '@nestjs/config';
         }),
       },
     ]),
+    JwtModule.registerAsync({
+      inject: [ConfigService],
+      useFactory: async (configService: ConfigService) => ({
+        secret: configService.get('app.auth.jwt.secret'),
+        signOptions: {
+          expiresIn: configService.get('app.auth.jwt.expiresIn'),
+        },
+      }),
+    }),
   ],
   controllers: [AuthHttpController, AuthMicroserviceController],
-  providers: [AuthService],
+  providers: [AuthService, AuthHelper, LocalStrategy],
 })
 export class AuthModule {}

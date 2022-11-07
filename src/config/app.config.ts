@@ -8,4 +8,10 @@ export const AppConfig = registerAs('app', () => ({
     origin: true,
     credentials: true,
   },
+  auth: {
+    jwt: {
+      secret: 'super-secret-token-for-jwt',
+      expiresIn: 60 * 60 * 24,
+    },
+  },
 }));
