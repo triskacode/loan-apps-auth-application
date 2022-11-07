@@ -37,7 +37,6 @@ export class HttpExceptionFilter<T extends Error> implements ExceptionFilter {
         errors = exception.message !== 'Not Found' ? exception.message : null;
         break;
       case UnauthorizedException:
-        console.log(exception);
         message = 'Unauthorized';
         errors =
           exception.message !== 'Unauthorized' ? exception.message : null;
@@ -51,7 +50,7 @@ export class HttpExceptionFilter<T extends Error> implements ExceptionFilter {
               : null
             : 'Whoops, something went wrong';
     }
-    console.log(exception);
+
     response
       .status(
         exception instanceof HttpException

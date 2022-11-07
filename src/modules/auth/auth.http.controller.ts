@@ -1,5 +1,6 @@
 import {
   Controller,
+  Get,
   Post,
   Req,
   UseFilters,
@@ -11,6 +12,7 @@ import { HttpExceptionFilter } from 'src/common/filters/http-exception.filter';
 import { TransformResponseInterceptor } from 'src/common/interceptors/transform-response.interceptor';
 import { AuthService } from './auth.service';
 import { User } from './auth.types';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 
 @Controller('auth')
@@ -23,5 +25,11 @@ export class AuthHttpController {
   @UseGuards(LocalAuthGuard)
   login(@Req() request: Request & { user: User }) {
     return this.authService.generateToken(request.user);
+  }
+
+  @Get('me')
+  @UseGuards(JwtAuthGuard)
+  me(@Req() request: Request & { user: User }) {
+    return request.user;
   }
 }

@@ -1,6 +1,6 @@
 import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
-import { firstValueFrom } from 'rxjs';
+import { MicroserviceHelper } from 'src/common/helpers/microservice.helper';
 import { AuthHelper } from 'src/modules/auth/helpers/auth.helper';
 import { User } from './auth.types';
 
@@ -27,11 +27,18 @@ export class AuthService {
   }
 
   async findUserByEmailWithPassword(email: string): Promise<User> {
-    const observableUser = this.client.send<User, { email: string }>(
-      { role: 'user', cmd: 'find-by-email-with-password' },
+    return MicroserviceHelper.sendRequest<User, { email: string }>(
+      this.client,
+      { endpoint: 'user', cmd: 'find-by-email-with-password' },
       { email },
     );
+  }
 
-    return firstValueFrom(observableUser);
+  async findUserById(id: number): Promise<User> {
+    return MicroserviceHelper.sendRequest<User, { id: number }>(
+      this.client,
+      { endpoint: 'user', cmd: 'find-by-id' },
+      { id },
+    );
   }
 }
