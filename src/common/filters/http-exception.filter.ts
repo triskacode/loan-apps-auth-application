@@ -3,6 +3,7 @@ import {
   BadRequestException,
   Catch,
   ExceptionFilter,
+  ForbiddenException,
   HttpException,
   HttpStatus,
   NotFoundException,
@@ -10,8 +11,8 @@ import {
 } from '@nestjs/common';
 
 @Catch()
-export class HttpExceptionFilter<T extends Error> implements ExceptionFilter {
-  catch(exception: T, host: ArgumentsHost) {
+export class HttpExceptionFilter implements ExceptionFilter {
+  catch(exception: Error, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse();
 
@@ -41,6 +42,10 @@ export class HttpExceptionFilter<T extends Error> implements ExceptionFilter {
         errors =
           exception.message !== 'Unauthorized' ? exception.message : null;
         break;
+      case ForbiddenException:
+        message = 'Forbidden';
+        errors = exception.message !== 'Forbidden' ? exception.message : null;
+        break;
       default:
         message = 'Internal Server Error';
         errors =
@@ -50,7 +55,7 @@ export class HttpExceptionFilter<T extends Error> implements ExceptionFilter {
               : null
             : 'Whoops, something went wrong';
     }
-
+    console.log(exception);
     response
       .status(
         exception instanceof HttpException
@@ -58,6 +63,10 @@ export class HttpExceptionFilter<T extends Error> implements ExceptionFilter {
           : HttpStatus.INTERNAL_SERVER_ERROR,
       )
       .json({
+        code:
+          exception instanceof HttpException
+            ? exception.getStatus()
+            : HttpStatus.INTERNAL_SERVER_ERROR,
         message,
         errors,
         data: null,

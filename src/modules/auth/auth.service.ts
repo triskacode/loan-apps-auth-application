@@ -1,7 +1,12 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { AuthHelper } from 'src/modules/auth/helpers/auth.helper';
 import { User } from '../user/entities/user.entity';
 import { UserService } from '../user/user.service';
+import { UserState } from '../user/user.types';
 
 @Injectable()
 export class AuthService {
@@ -15,6 +20,15 @@ export class AuthService {
 
     if (!user || !this.authHelper.comparePassword(password, user.password))
       throw new UnauthorizedException('Invalid credentials');
+
+    if (user.state === UserState.CREATED)
+      throw new ForbiddenException('Your account has not been activated');
+
+    if (user.state === UserState.SUSPENDED)
+      throw new ForbiddenException('Your account has not been suspended');
+
+    if (user.state === UserState.DELETED)
+      throw new ForbiddenException('Your account has not been deleted');
 
     return user;
   }
