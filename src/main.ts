@@ -11,6 +11,7 @@ async function bootstrap() {
   app.enableCors(configService.get('app.cors'));
   app.useGlobalPipes(
     new ValidationPipe({
+      whitelist: true,
       exceptionFactory: (errors) => new BadRequestException(errors),
     }),
   );
