@@ -1,9 +1,9 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { MicroserviceHelper } from 'src/common/helpers/microservice.helper';
+import { User } from 'src/domain/user';
 import { FindUserByEmailDto } from './dto/find-user-by-email.dto';
 import { FindUserByIdDto } from './dto/find-user-by-id.dto';
-import { User } from './entities/user.entity';
 
 @Injectable()
 export class UserService {

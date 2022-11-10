@@ -3,10 +3,9 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
+import { User, UserState } from 'src/domain/user';
 import { AuthHelper } from 'src/modules/auth/helpers/auth.helper';
-import { User } from '../user/entities/user.entity';
 import { UserService } from '../user/user.service';
-import { UserState } from '../user/user.types';
 
 @Injectable()
 export class AuthService {

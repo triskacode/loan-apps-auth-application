@@ -2,7 +2,7 @@ import { Controller, UseFilters, UseInterceptors } from '@nestjs/common';
 import { MessagePattern } from '@nestjs/microservices';
 import { MicroservcieExceptionFilter } from 'src/common/filters/microservice-exception.filter';
 import { TransformResponseInterceptor } from 'src/common/interceptors/transform-response.interceptor';
-import { User } from '../user/entities/user.entity';
+import { User } from 'src/domain/user';
 import { AuthService } from './auth.service';
 import { ValidateTokenDto } from './dto/validate-token.dto';
 
