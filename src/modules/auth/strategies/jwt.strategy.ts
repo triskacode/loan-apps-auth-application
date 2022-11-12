@@ -6,10 +6,7 @@ import { UserService } from 'src/modules/user/user.service';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
-  constructor(
-    private configService: ConfigService,
-    private userService: UserService,
-  ) {
+  constructor(configService: ConfigService, private userService: UserService) {
     super({
       ignoreExpiration: false,
       secretOrKey: configService.get('app.auth.jwt.secret'),
